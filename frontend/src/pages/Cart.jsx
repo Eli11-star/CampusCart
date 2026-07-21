@@ -8,6 +8,9 @@ function Cart() {
   const [cart, setCart] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const [showCheckoutModal, setShowCheckoutModal] = useState(false);
+const [checkingOut, setCheckingOut] = useState(false);
+
   const fetchCart = () => {
   const token = localStorage.getItem("token");
 
@@ -45,14 +48,16 @@ const totalPrice = cart.reduce(
 const handleCheckout = async () => {
   const token = localStorage.getItem("token");
 
-  if (cart.filter((item) => item.product).length === 0) {
+  const validCart = cart.filter((item) => item.product);
+
+  if (validCart.length === 0) {
     toast.error("Your cart is empty.");
     return;
   }
 
-  try {
-    const validCart = cart.filter((item) => item.product);
+  setCheckingOut(true);
 
+  try {
     for (const item of validCart) {
       await API.post(
         `/purchase/${item.product._id}`,
@@ -67,7 +72,8 @@ const handleCheckout = async () => {
 
     toast.success("Purchase successful! 🎉");
 
-    // Refresh cart after purchase
+    setShowCheckoutModal(false);
+
     fetchCart();
 
   } catch (err) {
@@ -75,6 +81,8 @@ const handleCheckout = async () => {
       err.response?.data?.message ||
       "Checkout failed."
     );
+  } finally {
+    setCheckingOut(false);
   }
 };
 
@@ -125,13 +133,49 @@ const handleCheckout = async () => {
   <h2>Total: ₹{totalPrice.toLocaleString()}</h2>
 
   <button
-    className="checkout-btn"
-    onClick={handleCheckout}
-  >
-    Proceed to Checkout
-  </button>
+  className="checkout-btn"
+  onClick={() => setShowCheckoutModal(true)}
+>
+  Proceed to Checkout
+</button>
 </div>
+{showCheckoutModal && (
+  <div className="modal-overlay">
+    <div className="modal">
 
+      <h2>🛒 Confirm Purchase</h2>
+
+      <p>
+        Are you sure you want to purchase all items in your cart?
+      </p>
+
+      <h3>
+        Total: ₹{totalPrice.toLocaleString()}
+      </h3>
+
+      <div className="modal-buttons">
+
+        <button
+          className="cancel-btn"
+          onClick={() => setShowCheckoutModal(false)}
+          disabled={checkingOut}
+        >
+          Cancel
+        </button>
+
+        <button
+          className="confirm-btn"
+          onClick={handleCheckout}
+          disabled={checkingOut}
+        >
+          {checkingOut ? "Processing..." : "Confirm Purchase"}
+        </button>
+
+      </div>
+
+    </div>
+  </div>
+)}
     </>
   );
 }
