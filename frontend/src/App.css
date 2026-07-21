@@ -101,20 +101,18 @@ h1{
 .product-image:hover{
     transform:scale(1.08);
 }
-.search-container{
-
-    display:flex;
-    justify-content:center;
-    margin-bottom:0;
+.search-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 30px;
 }
 
-.search-input{
-
-    width:600px;
-    padding:16px;
-    border-radius:40px;
-    border:1px solid #ddd;
-    font-size:17px;
+.search-input {
+  width: 600px;
+  padding: 16px;
+  border-radius: 40px;
+  border: 1px solid #ddd;
+  font-size: 17px;
 }
 
 .search-input:focus {
