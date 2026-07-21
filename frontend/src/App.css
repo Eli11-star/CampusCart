@@ -495,22 +495,15 @@ color:white;
     box-shadow:0 10px 30px rgba(0,0,0,.1);
 }
 
-.details-image{
-
-width:100%;
-
-max-width:500px;
-
-height:420px;
-
-object-fit:cover;
-
-border-radius:20px;
-
-box-shadow:0 10px 30px rgba(0,0,0,.15);
-
-transition:.3s;
-
+.details-image {
+  width: 100%;
+  max-width: 500px;
+  height: 420px;
+  object-fit: contain;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  transition: 0.3s;
+  display: block;
 }
 .details-image:hover{
 
@@ -557,10 +550,6 @@ margin:20px 0;
     flex-direction:column;
 }
 
-.details-image{
-    width:100%;
-    height:320px;
-}
 
 .details-info h1{
     font-size:30px;
