@@ -11,6 +11,10 @@ function ProductDetails() {
   const navigate = useNavigate();
 
   const [product, setProduct] = useState(null);
+  const [reviews, setReviews] = useState([]);
+const [rating, setRating] = useState(5);
+const [comment, setComment] = useState("");
+const [reviewLoading, setReviewLoading] = useState(false);
 
   useEffect(() => {
     API
@@ -29,8 +33,24 @@ function ProductDetails() {
 });
   }, [id]);
 
+  useEffect(() => {
+  API
+    .get(`/reviews/${id}`)
+    .then((res) => {
+      setReviews(res.data);
+    })
+    .catch((err) => {
+      toast.error(
+        err.response?.data?.message ||
+        "Couldn't load reviews."
+      );
+    });
+}, [id]);
+
 
   if (!product) {
+
+    
     return (
       <>
         <Navbar />
@@ -73,7 +93,7 @@ const startChat = async () => {
 };
 
 const updateStatus = async (newStatus) => {
-  
+  const token = localStorage.getItem("token");
 
   try {
     const res = await API.put(
@@ -99,150 +119,172 @@ const updateStatus = async (newStatus) => {
 }
 };
 
+const submitReview = async () => {
+  const token = localStorage.getItem("token");
+
+  if (!comment.trim()) {
+    toast.error("Please write a review.");
+    return;
+  }
+
+  setReviewLoading(true);
+
+  try {
+    const res = await API.post(
+      `/reviews/${id}`,
+      {
+        rating: Number(rating),
+        comment: comment.trim(),
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    setReviews((prev) => [
+      res.data,
+      ...prev,
+    ]);
+
+    setRating(5);
+    setComment("");
+
+    toast.success("Review added successfully! ⭐");
+
+  } catch (err) {
+    toast.error(
+      err.response?.data?.message ||
+      "Couldn't add review."
+    );
+  } finally {
+    setReviewLoading(false);
+  }
+};
   return (
     <>
       <Navbar />
 
-      <div className="details-container">
+     <div className="details-container">
 
-        <button
-          className="back-btn"
-          onClick={() => navigate("/products")}
-        >
-          ← Back
-        </button>
+  <button className="back-btn">
+    ← Back
+  </button>
 
-        <div className="details-card">
+  <div className="details-card">
+    {/* Your existing product details */}
+  </div>
 
-          <img
-            src={product.image}
-            alt={product.title}
-            className="details-image"
-          />
+  {/* ⭐ Reviews Section */}
+  <div className="reviews-section">
 
-          <div className="details-info">
+    <h2>⭐ Reviews & Ratings</h2>
 
-            <h1>{product.title}</h1>
+    {/* Average Rating */}
+    {reviews.length > 0 && (
+      <div className="average-rating">
+        <h3>
+          ⭐{" "}
+          {(
+            reviews.reduce(
+              (sum, review) =>
+                sum + review.rating,
+              0
+            ) / reviews.length
+          ).toFixed(1)}
+          / 5
+        </h3>
 
-            <h2>₹{Number(product.price).toLocaleString()}</h2>
+        <p>
+          Based on {reviews.length} review
+          {reviews.length !== 1 ? "s" : ""}
+        </p>
+      </div>
+    )}
 
-            <span className="details-category">
-  {product.category}
-</span>
+    {/* Add Review */}
+    <div className="review-form">
 
-          <div className="seller-card">
+      <h3>Leave a Review</h3>
 
-<h3>Seller Information</h3>
+      <select
+        value={rating}
+        onChange={(e) =>
+          setRating(e.target.value)
+        }
+      >
+        <option value="5">⭐⭐⭐⭐⭐ 5</option>
+        <option value="4">⭐⭐⭐⭐ 4</option>
+        <option value="3">⭐⭐⭐ 3</option>
+        <option value="2">⭐⭐ 2</option>
+        <option value="1">⭐ 1</option>
+      </select>
 
-<p>👤 {product.owner?.name}</p>
+      <textarea
+        placeholder="Write your review..."
+        value={comment}
+        onChange={(e) =>
+          setComment(e.target.value)
+        }
+        rows="4"
+      />
 
-<p>✉ {product.owner?.email}</p>
+      <button
+        className="contact-btn"
+        onClick={submitReview}
+        disabled={reviewLoading}
+      >
+        {reviewLoading
+          ? "Submitting..."
+          : "⭐ Submit Review"}
+      </button>
 
-</div> 
+    </div>
 
-         <div className="description-box">
+    {/* Reviews List */}
+    <div className="reviews-list">
 
-<h3>Description</h3>
+      {reviews.length === 0 ? (
+        <h3>No reviews yet.</h3>
+      ) : (
+        reviews.map((review) => (
+          <div
+            className="review-card"
+            key={review._id}
+          >
 
-<p>{product.description}</p>
+            <h3>
+              {review.reviewer?.name ||
+                "Anonymous"}
+            </h3>
 
-</div>  
+            <p>
+              {"⭐".repeat(review.rating)}
+            </p>
 
-<p>
-  <strong>Status:</strong>{" "}
-  <span
-className={
-product.status==="Available"
-?"status-available"
-:"status-sold"
-}
->
+            <p>
+              {review.comment}
+            </p>
 
-{product.status}
+            <small>
+              {new Date(
+                review.createdAt
+              ).toLocaleDateString()}
+            </small>
 
-</span>
-</p>
+          </div>
+        ))
+      )}
 
-            
-
-{product.owner?._id === user?.id ? (
-  <div className="card-buttons">
-    <button
-      className="edit-btn"
-      onClick={() => navigate("/products")}
-    >
-      ✏ Edit
-    </button>
-
-    <button
-      className="delete-btn"
-      onClick={async () => {
-  if (!window.confirm("Delete this product?")) return;
-
-  try {
-    const token = localStorage.getItem("token");
-
-    await API.delete(`/products/${product._id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    toast.success("Product deleted successfully!");
-    navigate("/profile");
-  } catch (err) {
-    toast.error(
-      err.response?.data?.message ||
-      "Couldn't delete product."
-    );
-  }
-}}
-    >
-      🗑 Delete
-    </button>
-   <button
-      className="contact-btn"
-      onClick={() =>
-        updateStatus(
-          product.status === "Available"
-            ? "Sold"
-            : "Available"
-        )
-      }
-    >
-      {product.status === "Available"
-        ? "✔ Mark as Sold"
-        : "↩ Mark as Available"}
-    </button>
+    </div>
 
   </div>
-) : (
-product.status === "Sold" ? (
-  <button
-    className="contact-btn"
-    disabled
-    style={{
-      background: "#888",
-      cursor: "not-allowed",
-    }}
-  >
-    ❌ Item Sold
-  </button>
-) : (
-  <button
-    className="contact-btn"
-    onClick={startChat}
-  >
-    💬 Chat with Seller
-  </button>
-))}
-          </div>
 
-        </div>
-
-      </div>
-    </>
+</div>
+</>
   );
+
 
 }
 

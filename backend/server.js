@@ -14,6 +14,7 @@ import chatRoutes from "./routes/chatRoutes.js";
 import { createServer } from "http";
 import { Server } from "socket.io";
 import purchaseRoutes from "./routes/purchaseRoutes.js";
+import reviewRoutes from "./routes/reviewRoutes.js";
 
 const result = dotenv.config({ path: "./.env" });
 console.log(result);
@@ -41,6 +42,7 @@ app.use("/wishlist", wishlistRoutes);
 app.use("/chat", chatRoutes);
 app.use("/cart", cartRoutes);
 app.use("/purchase", purchaseRoutes);
+app.use("/reviews", reviewRoutes);
 
 // Home route
 app.get("/", (req, res) => {
