@@ -159,7 +159,7 @@ function ProductDetails() {
   // =========================
 
  const handleSubmitReview = async () => {
-  if (!reviewText.trim()) {
+  if (!comment.trim()) {
     toast.error("Please write a review");
     return;
   }
@@ -167,18 +167,21 @@ function ProductDetails() {
   try {
     const res = await API.post(`/reviews/${id}`, {
       rating,
-      comment: reviewText,
+      comment,
     });
 
     setReviews((prev) => [...prev, res.data]);
 
-    setReviewText("");
+    setComment("");
     setRating(5);
 
     toast.success("Review submitted!");
   } catch (error) {
     console.error(error);
-    toast.error("Failed to submit review");
+    toast.error(
+      error.response?.data?.message ||
+        "Failed to submit review"
+    );
   }
 };
 
@@ -442,11 +445,11 @@ function ProductDetails() {
     </select>
 
     <textarea
-      value={reviewText}
-      onChange={(e) => setReviewText(e.target.value)}
-      placeholder="Write your review..."
-      className="review-textarea"
-    />
+  value={comment}
+  onChange={(e) => setComment(e.target.value)}
+  placeholder="Write your review..."
+  className="review-textarea"
+/>
   </div>
 
   <button className="submit-review-btn" onClick={handleSubmitReview}>
