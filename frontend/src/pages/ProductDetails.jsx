@@ -158,64 +158,29 @@ function ProductDetails() {
   // SUBMIT REVIEW
   // =========================
 
-  const submitReview = async () => {
-    const token =
-      localStorage.getItem("token");
+ const handleSubmitReview = async () => {
+  if (!reviewText.trim()) {
+    toast.error("Please write a review");
+    return;
+  }
 
-    if (!token) {
-      toast.error(
-        "Please login to leave a review."
-      );
-      return;
-    }
+  try {
+    const res = await API.post(`/reviews/${id}`, {
+      rating,
+      comment: reviewText,
+    });
 
-    if (!comment.trim()) {
-      toast.error(
-        "Please write a review."
-      );
-      return;
-    }
+    setReviews((prev) => [...prev, res.data]);
 
-    setReviewLoading(true);
+    setReviewText("");
+    setRating(5);
 
-    try {
-      const res = await API.post(
-        `/reviews/${id}`,
-        {
-          rating: Number(rating),
-          comment:
-            comment.trim(),
-        },
-        {
-          headers: {
-            Authorization:
-              `Bearer ${token}`,
-          },
-        }
-      );
-
-      setReviews((prev) => [
-        res.data,
-        ...prev,
-      ]);
-
-      setRating(5);
-      setComment("");
-
-      toast.success(
-        "Review added successfully! ⭐"
-      );
-
-    } catch (err) {
-      toast.error(
-        err.response?.data?.message ||
-          "Couldn't add review."
-      );
-    } finally {
-      setReviewLoading(false);
-    }
-  };
-
+    toast.success("Review submitted!");
+  } catch (error) {
+    console.error(error);
+    toast.error("Failed to submit review");
+  }
+};
 
   // =========================
   // PAGE
@@ -457,196 +422,56 @@ function ProductDetails() {
         </div>
 
 
-        {/* =========================
-            REVIEWS
-        ========================= */}
+       {/* Reviews Section */}
+<div className="reviews-section">
+  <h2>⭐ Reviews & Ratings</h2>
 
-        <div className="reviews-section">
+  <h3>Leave a Review</h3>
 
-          <h2>
-            ⭐ Reviews & Ratings
-          </h2>
+  <div className="review-form">
+    <select
+      value={rating}
+      onChange={(e) => setRating(Number(e.target.value))}
+      className="rating-select"
+    >
+      <option value={5}>⭐⭐⭐⭐⭐</option>
+      <option value={4}>⭐⭐⭐⭐</option>
+      <option value={3}>⭐⭐⭐</option>
+      <option value={2}>⭐⭐</option>
+      <option value={1}>⭐</option>
+    </select>
 
+    <textarea
+      value={reviewText}
+      onChange={(e) => setReviewText(e.target.value)}
+      placeholder="Write your review..."
+      className="review-textarea"
+    />
+  </div>
 
-          {/* AVERAGE RATING */}
+  <button className="submit-review-btn" onClick={handleSubmitReview}>
+    ⭐ Submit Review
+  </button>
 
-          {reviews.length > 0 && (
-
-            <div className="average-rating">
-
-              <h3>
-
-                ⭐{" "}
-
-                {(
-                  reviews.reduce(
-                    (
-                      sum,
-                      review
-                    ) =>
-                      sum +
-                      Number(
-                        review.rating
-                      ),
-                    0
-                  ) /
-                  reviews.length
-                ).toFixed(1)}
-
-                / 5
-
-              </h3>
-
-              <p>
-                Based on{" "}
-                {reviews.length}{" "}
-                review
-                {reviews.length !==
-                1
-                  ? "s"
-                  : ""}
-              </p>
-
-            </div>
-
-          )}
-
-
-          {/* REVIEW FORM */}
-
-          <div className="review-form">
-
-            <h3>
-              Leave a Review
-            </h3>
-
-
-            <select
-              value={rating}
-              onChange={(e) =>
-                setRating(
-                  Number(
-                    e.target.value
-                  )
-                )
-              }
-            >
-
-              <option value="5">
-                ⭐⭐⭐⭐⭐ 5
-              </option>
-
-              <option value="4">
-                ⭐⭐⭐⭐ 4
-              </option>
-
-              <option value="3">
-                ⭐⭐⭐ 3
-              </option>
-
-              <option value="2">
-                ⭐⭐ 2
-              </option>
-
-              <option value="1">
-                ⭐ 1
-              </option>
-
-            </select>
-
-
-            <textarea
-              placeholder="Write your review..."
-              value={comment}
-              onChange={(e) =>
-                setComment(
-                  e.target.value
-                )
-              }
-              rows="4"
-            />
-
-
-            <button
-              className="contact-btn"
-              onClick={
-                submitReview
-              }
-              disabled={
-                reviewLoading
-              }
-            >
-              {reviewLoading
-                ? "Submitting..."
-                : "⭐ Submit Review"}
-            </button>
-
+  <div className="reviews-list">
+    {reviews.length === 0 ? (
+      <p className="no-reviews">No reviews yet.</p>
+    ) : (
+      reviews.map((review) => (
+        <div className="review-card" key={review._id}>
+          <div className="review-header">
+            <strong>{review.user?.name}</strong>
+            <span>
+              {"⭐".repeat(review.rating)}
+            </span>
           </div>
 
-
-          {/* REVIEWS LIST */}
-
-          <div className="reviews-list">
-
-            {reviews.length ===
-            0 ? (
-
-              <h3>
-                No reviews yet.
-              </h3>
-
-            ) : (
-
-              reviews.map(
-                (review) => (
-
-                  <div
-                    className="review-card"
-                    key={
-                      review._id
-                    }
-                  >
-
-                    <h3>
-                      {review
-                        .reviewer
-                        ?.name ||
-                        "Anonymous"}
-                    </h3>
-
-
-                    <p>
-                      {"⭐".repeat(
-                        Number(
-                          review.rating
-                        )
-                      )}
-                    </p>
-
-
-                    <p>
-                      {
-                        review.comment
-                      }
-                    </p>
-
-
-                    <small>
-                      {new Date(
-                        review.createdAt
-                      ).toLocaleDateString()}
-                    </small>
-
-                  </div>
-
-                )
-              )
-
-            )}
-
-          </div>
-
+          <p>{review.comment}</p>
         </div>
+      ))
+    )}
+  </div>
+</div>
 
       </div>
     </>
