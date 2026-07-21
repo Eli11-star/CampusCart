@@ -3,6 +3,7 @@ import axios from "axios";
 import Navbar from "../components/Navbar";
 import "../App.css";
 import { useNavigate } from "react-router-dom";
+import API from "../api";
 
 
 function MyProducts() {
@@ -16,8 +17,7 @@ const [deleteId, setDeleteId] = useState(null);
   useEffect(() => {
     const token = localStorage.getItem("token");
 
-    axios
-      .get("http://localhost:5000/my-products", {
+  API.get("/my-products", {
         headers: {
           Authorization: `Bearer ${token}`,
         },

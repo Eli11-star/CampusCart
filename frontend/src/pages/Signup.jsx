@@ -2,42 +2,43 @@ import { useState } from "react";
 import API from "../api";
 import { useNavigate, Link } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import toast from "react-hot-toast";
 
 function Signup() {
   const navigate = useNavigate();
-const handleSignup = async () => {
-  if (!name || !email || !password) {
-    toast.error("Please fill all fields.");
-    return;
-  }
 
-  setLoading(true);
-
-  try {
-    const res = await API.post("/api/auth/signup", {
-      name,
-      email,
-      password,
-    });
-
-    toast.success(`Welcome, ${res.data.user.name}! 🎉`);
-
-    navigate("/dashboard");
-
-  } catch (err) {
-    toast.error(
-      err.response?.data?.message || "Signup failed."
-    );
-  } finally {
-    setLoading(false);
-  }
-};
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const handleSignup = async () => {
+    if (!name || !email || !password) {
+      toast.error("Please fill all fields.");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const res = await API.post("/api/auth/signup", {
+        name,
+        email,
+        password,
+      });
+
+      toast.success(`Welcome, ${res.data.user.name}! 🎉`);
+
+      navigate("/dashboard");
+
+    } catch (err) {
+      toast.error(
+        err.response?.data?.message || "Signup failed."
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
   
 
   return (

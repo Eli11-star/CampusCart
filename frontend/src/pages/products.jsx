@@ -238,27 +238,11 @@ const handleImageUpload = async (e) => {
     setImage(response.data.secure_url);
 
     toast.success("Image uploaded successfully!");
-  } 
-  catch {
-  toast.error("Image upload failed.");
-}
+  } catch {
+    toast.error("Image upload failed.");
+  }
 };
-const loadingToast = toast.loading("Uploading image...");
 
-try {
-  const response = await axios.post(
-    "https://api.cloudinary.com/v1_1/pekzsoyg/image/upload",
-    formData
-  );
-
-  setImage(response.data.secure_url);
-
-  toast.dismiss(loadingToast);
-  toast.success("Image uploaded successfully!");
-} catch {
-  toast.dismiss(loadingToast);
-  toast.error("Image upload failed.");
-}
 
 
 const fetchWishlist = () => {
@@ -378,9 +362,7 @@ const startChat = async (sellerId) => {
       <div className="hero">
   <h1>🛒 CampusCart</h1>
 
-<p>
-  Buy. Sell. Connect.
-</p>
+<p> Buy. Sell. Connect.</p>
 
 <span>
   Discover affordable products from fellow students on your campus.
@@ -449,8 +431,10 @@ const startChat = async (sellerId) => {
   className="search-input"
 
 />
+
+
 </div>
-      <div className="form-container">  </div>
+      
      <div className="form"> 
       <input
   type="text"

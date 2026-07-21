@@ -4,11 +4,11 @@ body{
     background:#f4f7fc;
 }
 
-.container{
-    width:90%;
-    max-width:1300px;
-    margin:auto;
-    padding-top:40px;
+.container {
+  width: 90%;
+  max-width: 1300px;
+  margin: 0 auto;
+  padding-top: 0;
 }
 
 h1{
@@ -16,38 +16,6 @@ h1{
   margin:30px 0;
 }
 
-.form{
-  background:white;
-  width:400px;
-  margin:20px auto;
-  padding:20px;
-  border-radius:12px;
-  box-shadow:0 4px 10px rgba(0,0,0,0.1);
-}
-
-.form input{
-  width:90%;
-  padding:12px;
-  margin:10px 0;
-  border-radius:8px;
-  border:1px solid #ccc;
-  font-size:16px;
-}
-
-.form button{
-  width:95%;
-  padding:12px;
-  background:#2563eb;
-  color:white;
-  border:none;
-  border-radius:8px;
-  cursor:pointer;
-  font-size:16px;
-}
-
-.form button:hover{
-  background:#1d4ed8;
-}
 
 .products{
 
@@ -137,7 +105,7 @@ h1{
 
     display:flex;
     justify-content:center;
-    margin-bottom:35px;
+    margin-bottom:0;
 }
 
 .search-input{
@@ -153,33 +121,44 @@ h1{
   border-color: #2563eb;
   box-shadow: 0 0 5px rgba(37, 99, 235, 0.4);
 }
-.hero{
-    text-align:center;
-    margin-bottom:50px;
+
+.hero {
+  text-align: center;
+  padding: 20px;
+  margin: 0;
 }
 
-.hero h1{
-
-    font-size:60px;
-    margin-bottom:15px;
-    color:#111827;
+.hero h1 {
+  margin: 0 0 15px 0 !important;
+  padding: 0;
+  font-size: 3rem;
+  line-height: 1.2;
+  color: #1f2937;
+  text-align: center;
 }
 
-.hero p{
-
-    font-size:22px;
-    color:#6b7280;
+.hero p {
+  margin: 0 0 10px 0 !important;
+  padding: 0;
+  font-size: 1.5rem;
+  line-height: 1.5;
+  text-align: center;
 }
 
-.stats{
-
-    display:flex;
-    justify-content:center;
-    gap:30px;
-    flex-wrap:wrap;
-    margin-bottom:50px;
+.hero span {
+  display: block;
+  margin: 0;
+  line-height: 1.5;
+  text-align: center;
 }
 
+.stats {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  flex-wrap: wrap;
+  margin: 10px 0 20px;
+}
 .stat-card{
 
     width:250px;
@@ -229,15 +208,24 @@ h1{
     margin-bottom:60px;
 }
 .form input,
-.form select{
+.form select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
 
-    padding:16px;
+  width: 100%;
+  padding: 14px 45px 14px 16px;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  background-color: white;
 
-    border-radius:12px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24'%3E%3Cpath d='M7 10l5 5 5-5' fill='none' stroke='%23333' stroke-width='2'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  background-size: 16px;
 
-    border:1px solid #ddd;
-
-    font-size:16px;
+  cursor: pointer;
 }
 
 .form button{
@@ -266,12 +254,6 @@ h1{
     background:#1d4ed8;
 
     transform:translateY(-3px);
-}
-
-
-.form button:hover{
-    background:#1d4ed8;
-    transform:translateY(-2px);
 }
 /* Dark background */
 
