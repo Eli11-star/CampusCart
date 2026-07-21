@@ -1,8 +1,10 @@
 import "./Navbar.css";
 import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 function Navbar() {
   const navigate = useNavigate();
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const user = JSON.parse(localStorage.getItem("user"));
 
@@ -12,34 +14,54 @@ function Navbar() {
     navigate("/");
   };
 
+  const closeMenu = () => {
+    setMenuOpen(false);
+  };
+
   return (
     <nav className="navbar">
 
+      {/* Logo */}
       <div className="nav-logo">
         <img src="/logo.png" alt="CampusCart" />
+
         <div className="brand">
           <h2>CampusCart</h2>
           <span>Buy. Sell. Connect.</span>
         </div>
       </div>
 
-      <div className="nav-links">
-        <Link to="/products">Home</Link>
-        <Link to="/dashboard">Dashboard</Link>
-        <Link to="/products">Sell</Link>
-        <Link to="/wishlist">Wishlist</Link>
-        <Link to="/my-products">My Products</Link>
-        <Link to="/cart">Cart</Link>
-        <Link to="/inbox">Inbox</Link>
-        <Link to="/profile">👤 Profile</Link>
-      </div>
+      {/* Hamburger Button */}
+      <button
+        className="menu-toggle"
+        onClick={() => setMenuOpen(!menuOpen)}
+      >
+        ☰
+      </button>
 
-      <div className="nav-user">
-        <span>Hello, {user?.name}</span>
+      {/* Navigation */}
+      <div className={`nav-content ${menuOpen ? "open" : ""}`}>
 
-        <button onClick={handleLogout}>
-          Logout
-        </button>
+        <div className="nav-links">
+          <Link to="/products" onClick={closeMenu}>Home</Link>
+          <Link to="/dashboard" onClick={closeMenu}>Dashboard</Link>
+          <Link to="/products" onClick={closeMenu}>Sell</Link>
+          <Link to="/wishlist" onClick={closeMenu}>Wishlist</Link>
+          <Link to="/my-products" onClick={closeMenu}>My Products</Link>
+          <Link to="/cart" onClick={closeMenu}>Cart</Link>
+          <Link to="/inbox" onClick={closeMenu}>Inbox</Link>
+          <Link to="/profile" onClick={closeMenu}>👤 Profile</Link>
+        </div>
+
+        {/* User Section */}
+        <div className="nav-user">
+          <span>Hello, {user?.name}</span>
+
+          <button onClick={handleLogout}>
+            Logout
+          </button>
+        </div>
+
       </div>
 
     </nav>
