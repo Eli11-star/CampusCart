@@ -48,6 +48,7 @@ function Navbar() {
           <Link to="/my-products" onClick={closeMenu}>My Products</Link>
           <Link to="/cart" onClick={closeMenu}>Cart</Link>
           <Link to="/purchases" onClick={closeMenu}> My Purchases</Link>
+          <Link to="/my-sales" onClick={closeMenu}> My Sales</Link>
           <Link to="/inbox" onClick={closeMenu}>Inbox</Link>
           <Link to="/profile" onClick={closeMenu}>👤 Profile</Link>
         </div>
