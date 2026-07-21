@@ -463,7 +463,7 @@ function ProductDetails() {
       reviews.map((review) => (
         <div className="review-card" key={review._id}>
           <div className="review-header">
-            <strong>{review.user?.name}</strong>
+           <strong>{review.reviewer?.name}</strong>
             <span>
               {"⭐".repeat(review.rating)}
             </span>

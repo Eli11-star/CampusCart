@@ -13,19 +13,24 @@ const router = express.Router();
 
 router.get("/:productId", async (req, res) => {
   try {
+    console.log("Getting reviews for product:", req.params.productId);
+
     const reviews = await Review.find({
       product: req.params.productId,
     })
       .populate("reviewer", "name")
       .sort({ createdAt: -1 });
 
+    console.log("Reviews found:", reviews);
+
     res.json(reviews);
 
   } catch (err) {
-    console.log(err);
+    console.error("GET REVIEWS ERROR:", err);
 
     res.status(500).json({
       message: "Couldn't load reviews.",
+      error: err.message,
     });
   }
 });
