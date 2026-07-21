@@ -72,5 +72,33 @@ router.get("/", auth, async (req, res) => {
     });
   }
 });
+// =========================
+// GET SELLER SALES
+// =========================
+router.get("/sales", auth, async (req, res) => {
+  try {
+    const products = await Product.find({
+      owner: req.user.id,
+    }).select("_id");
+
+    const productIds = products.map((product) => product._id);
+
+    const sales = await Purchase.find({
+      product: { $in: productIds },
+    })
+      .populate("product")
+      .populate("buyer", "name email")
+      .sort({ purchasedAt: -1 });
+
+    res.json(sales);
+
+  } catch (err) {
+    console.log(err);
+
+    res.status(500).json({
+      message: "Couldn't load sales.",
+    });
+  }
+});
 
 export default router;

@@ -10,14 +10,56 @@ function Dashboard() {
   const user = JSON.parse(localStorage.getItem("user"));
 
   const [products, setProducts] = useState([]);
+  const [sales, setSales] = useState([]);
+const [salesLoading, setSalesLoading] = useState(true);
 
-  useEffect(() => {
-    API.get("/products")
-      .then((res) => {
-        setProducts(res.data);
-      })
-      .catch((err) => console.log(err));
-  }, []);
+ useEffect(() => {
+  const token = localStorage.getItem("token");
+
+  // Fetch all products
+  API.get("/products")
+    .then((res) => {
+      setProducts(res.data);
+    })
+    .catch((err) => {
+      console.log("Products error:", err);
+    });
+
+  // Fetch seller sales
+  API.get("/purchase/sales", {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+    .then((res) => {
+      setSales(res.data);
+    })
+    .catch((err) => {
+      console.log("Sales error:", err);
+    })
+    .finally(() => {
+      setSalesLoading(false);
+    });
+}, []);
+
+const myProducts = products.filter(
+  (product) =>
+    String(product.owner?._id) === String(user?.id)
+);
+
+const availableProducts = myProducts.filter(
+  (product) => product.status === "Available"
+);
+
+const soldProducts = myProducts.filter(
+  (product) => product.status === "Sold"
+);
+
+const totalSales = sales.reduce(
+  (total, sale) =>
+    total + (sale.product?.price || 0),
+  0
+);
 
   return (
     <>
@@ -35,77 +77,87 @@ function Dashboard() {
 
         <div className="dashboard-stats">
 
-          <div className="dashboard-card">
-            <h2>{products.length}</h2>
-            <p>Products</p>
-          </div>
+  <div className="dashboard-card">
+    <h2>{myProducts.length}</h2>
+    <p>My Products</p>
+  </div>
 
-          <div className="dashboard-card">
-            <h2>
-              ₹
-              {products
-                .reduce((sum, p) => sum + p.price, 0)
-                .toLocaleString()}
-            </h2>
-            <p>Marketplace Value</p>
-          </div>
+  <div className="dashboard-card">
+    <h2>{availableProducts.length}</h2>
+    <p>Available</p>
+  </div>
 
-          <div className="dashboard-card">
-            <h2>{user?.name}</h2>
-            <p>Logged In User</p>
-          </div>
+  <div className="dashboard-card">
+    <h2>{soldProducts.length}</h2>
+    <p>Products Sold</p>
+  </div>
 
-        </div>
+  <div className="dashboard-card">
+    <h2>
+      ₹{totalSales.toLocaleString()}
+    </h2>
+    <p>Total Sales</p>
+  </div>
 
-        <div className="quick-actions">
-
-          <button onClick={() => navigate("/products")}>
-            🛍 Browse Products
-          </button>
-
-          <button onClick={() => navigate("/wishlist")}>
-            ❤️ Wishlist
-          </button>
-
-          <button onClick={() => navigate("/cart")}>
-            🛒 Cart
-          </button>
-
-          <button onClick={() => navigate("/inbox")}>
-            💬 Inbox
-          </button>
-
-          <h2 style={{ marginTop: "50px", marginBottom: "20px" }}>
-    Recently Added
-</h2>
-
-<div className="products">
-  {products.slice(0, 4).map((product) => (
-    <div
-      className="card"
-      key={product._id}
-      onClick={() => navigate(`/products/${product._id}`)}
-    >
-      <div className="card-image">
-        <img
-          src={product.image}
-          alt={product.title}
-          className="product-image"
-        />
-      </div>
-
-      <div className="card-body">
-        <h2>{product.title}</h2>
-
-        <h3>
-          ₹{Number(product.price).toLocaleString()}
-        </h3>
-      </div>
-    </div>
-  ))}
 </div>
 
+       <div className="sales-section">
+
+  <h2>💰 Recent Sales</h2>
+
+  {salesLoading ? (
+    <p>Loading sales...</p>
+  ) : sales.length === 0 ? (
+    <p>No products sold yet.</p>
+  ) : (
+    <div className="sales-list">
+
+      {sales.slice(0, 5).map((sale) => (
+
+        <div className="sale-card" key={sale._id}>
+
+          <img
+            src={sale.product?.image}
+            alt={sale.product?.title}
+          />
+
+          <div className="sale-info">
+
+            <h3>
+              {sale.product?.title}
+            </h3>
+
+            <p>
+              Buyer: {sale.buyer?.name || "Unknown"}
+            </p>
+
+            <p>
+              Email: {sale.buyer?.email || "N/A"}
+            </p>
+
+            <p>
+              Purchased on:{" "}
+              {new Date(
+                sale.purchasedAt
+              ).toLocaleDateString()}
+            </p>
+
+          </div>
+
+          <div className="sale-price">
+            ₹{Number(
+              sale.product?.price || 0
+            ).toLocaleString()}
+          </div>
+
         </div>
+
+      ))}
+
+    </div>
+  )}
+
+</div>
 
       </div>
     </>

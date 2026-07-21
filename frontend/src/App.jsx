@@ -13,6 +13,7 @@ import Dashboard from "./pages/Dashboard";
 import Profile from "./pages/Profile";
 import EditProduct from "./pages/EditProduct";
 import { Toaster } from "react-hot-toast";
+import Purchases from "./pages/Purchases";
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
           <Route path="/chat/:chatId" element={<Chat />} />
           <Route path="/my-products" element={<MyProducts />} />
           <Route path="/cart" element={<Cart />} />
+          <Route path="/purchases" element={<Purchases />} />
           <Route path="/inbox" element={<Inbox />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/profile" element={<Profile />} />

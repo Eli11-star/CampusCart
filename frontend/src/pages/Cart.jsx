@@ -39,6 +39,59 @@ const [checkingOut, setCheckingOut] = useState(false);
     fetchCart();
   }, []);
 
+  const updateQuantity = async (productId, newQuantity) => {
+  const token = localStorage.getItem("token");
+
+  if (newQuantity < 1) {
+    return;
+  }
+
+  try {
+    await API.put(
+      `/cart/${productId}`,
+      { quantity: newQuantity },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    fetchCart();
+
+  } catch (err) {
+    toast.error(
+      err.response?.data?.message ||
+      "Couldn't update quantity."
+    );
+  }
+};
+
+
+const removeFromCart = async (productId) => {
+  const token = localStorage.getItem("token");
+
+  try {
+    await API.delete(
+      `/cart/${productId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    toast.success("Removed from cart 🛒");
+
+    fetchCart();
+
+  } catch (err) {
+    toast.error(
+      err.response?.data?.message ||
+      "Couldn't remove item from cart."
+    );
+  }
+};
   
 const totalPrice = cart.reduce(
   (total, item) => total + (item.product?.price || 0) * item.quantity,
@@ -116,7 +169,48 @@ const handleCheckout = async () => {
   ₹{item.product.price.toLocaleString()}
 </h3>
 
-            <p>Quantity: {item.quantity}</p>
+            <div className="quantity-controls">
+
+  <button
+    onClick={() =>
+      updateQuantity(
+        item.product._id,
+        item.quantity - 1
+      )
+    }
+    disabled={item.quantity <= 1}
+  >
+    −
+  </button>
+
+  <span>{item.quantity}</span>
+
+  <button
+    onClick={() =>
+      updateQuantity(
+        item.product._id,
+        item.quantity + 1
+      )
+    }
+  >
+    +
+  </button>
+
+</div>
+
+<p>
+  Subtotal: ₹
+  {(item.product.price * item.quantity).toLocaleString()}
+</p>
+
+<button
+  className="delete-btn"
+  onClick={() =>
+    removeFromCart(item.product._id)
+  }
+>
+  🗑️ Remove
+</button>
 
           </div>
 

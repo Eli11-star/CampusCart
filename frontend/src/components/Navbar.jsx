@@ -47,6 +47,7 @@ function Navbar() {
           <Link to="/wishlist" onClick={closeMenu}>Wishlist</Link>
           <Link to="/my-products" onClick={closeMenu}>My Products</Link>
           <Link to="/cart" onClick={closeMenu}>Cart</Link>
+          <Link to="/purchases" onClick={closeMenu}> My Purchases</Link>
           <Link to="/inbox" onClick={closeMenu}>Inbox</Link>
           <Link to="/profile" onClick={closeMenu}>👤 Profile</Link>
         </div>
