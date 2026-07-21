@@ -48,7 +48,7 @@ function Signup() {
   autoClose={2000}
 />
       <div className="auth-card">
-        <h1>🎓 Student Marketplace</h1>
+        <h1>🛒 CampusCart</h1>
         <h2>Create Account</h2>
 
         <input
