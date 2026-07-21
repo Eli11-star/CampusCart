@@ -36,6 +36,7 @@
 .nav-links {
   display: flex;
   gap: 28px;
+  margin-left: 60px;
 }
 
 .nav-links a {

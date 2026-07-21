@@ -114,8 +114,8 @@ function Profile() {
           </p>
 
           <div className="profile-avatar">
-            {user?.name?.(0).toUpperCase()}
-          </div>
+  {user?.name?.[0]?.toUpperCase()}
+</div>
 
           <h1>{user?.name}</h1>
 
