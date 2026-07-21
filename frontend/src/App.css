@@ -116,8 +116,9 @@ h1{
 }
 
 .search-input:focus {
-  border-color: #2563eb;
-  box-shadow: 0 0 5px rgba(37, 99, 235, 0.4);
+  outline: none;
+  border-color: #F4A62A;
+  box-shadow: 0 0 5px rgba(244, 166, 42, 0.35);
 }
 
 .hero {
@@ -248,9 +249,7 @@ h1{
 }
 
 .form button:hover{
-
-    background:#1d4ed8;
-
+    background:#F4A62A;
     transform:translateY(-3px);
 }
 /* Dark background */
@@ -385,7 +384,7 @@ background:#c62828;
     background:#dc2626;
 }
 .price{
-    color:#2f66f3;
+   color:#2D5C9A;
     font-size:22px;
     font-weight:700;
     margin-bottom:18px;
@@ -395,7 +394,8 @@ background:#c62828;
     top:15px;
     left:15px;
 
-    background:#2f66f3;
+   
+    background:#F4A62A;
     color:white;
 
     padding:8px 18px;
@@ -428,12 +428,12 @@ background:#c62828;
 
 .categories button:hover{
     transform:translateY(-3px);
-    background:#2563eb;
+    background:#F4A62A;
     color:white;
 }
 
 .active-category{
-    background:#2563eb !important;
+    background:#F4A62A !important;
     color:white;
 }
 .contact-btn{
@@ -844,7 +844,7 @@ font-weight:600;
 
 .dashboard-card h2 {
   font-size: 2rem;
-  color: #2D5C9A;
+  color: #F4A62A;
 }
 
 .dashboard-card p {
@@ -933,7 +933,7 @@ font-weight:600;
 }
 
 .profile-stat h2 {
-  color: #2D5C9A;
+  color: #F4A62A;
   font-size: 2rem;
 }
 
