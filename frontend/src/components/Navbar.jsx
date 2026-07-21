@@ -21,7 +21,6 @@ function Navbar() {
   return (
     <nav className="navbar">
 
-      {/* Logo */}
       <div className="nav-logo">
         <img src="/logo.png" alt="CampusCart" />
 
@@ -31,16 +30,15 @@ function Navbar() {
         </div>
       </div>
 
-      {/* Hamburger Button */}
+      {/* Hamburger button */}
       <button
-        className="menu-toggle"
+        className="hamburger"
         onClick={() => setMenuOpen(!menuOpen)}
       >
         ☰
       </button>
 
-      {/* Navigation */}
-      <div className={`nav-content ${menuOpen ? "open" : ""}`}>
+      <div className={`nav-menu ${menuOpen ? "active" : ""}`}>
 
         <div className="nav-links">
           <Link to="/products" onClick={closeMenu}>Home</Link>
@@ -53,7 +51,6 @@ function Navbar() {
           <Link to="/profile" onClick={closeMenu}>👤 Profile</Link>
         </div>
 
-        {/* User Section */}
         <div className="nav-user">
           <span>Hello, {user?.name}</span>
 

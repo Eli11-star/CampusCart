@@ -45,26 +45,38 @@ const totalPrice = cart.reduce(
 const handleCheckout = async () => {
   const token = localStorage.getItem("token");
 
+  if (cart.filter((item) => item.product).length === 0) {
+    toast.error("Your cart is empty.");
+    return;
+  }
+
   try {
-    // Checkout logic goes here
-    toast.success("Purchase successful!");
+    const validCart = cart.filter((item) => item.product);
+
+    for (const item of validCart) {
+      await API.post(
+        `/purchase/${item.product._id}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+    }
+
+    toast.success("Purchase successful! 🎉");
+
+    // Refresh cart after purchase
+    fetchCart();
+
   } catch (err) {
-  toast.error(
-    err.response?.data?.message ||
-    "Checkout failed."
-  );
-}
+    toast.error(
+      err.response?.data?.message ||
+      "Checkout failed."
+    );
+  }
 };
-if (loading) {
-  return (
-    <>
-      <Navbar />
-      <div className="container">
-        <h2>Loading cart...</h2>
-      </div>
-    </>
-  );
-}
 
 
   return (

@@ -36,12 +36,12 @@ router.post("/:productId", auth, async (req, res) => {
         await product.save();
 
         await User.findByIdAndUpdate(req.user.id, {
-
-            $pull: {
-                cart: product._id
-            }
-
-        });
+    $pull: {
+        cart: {
+            product: product._id
+        }
+    }
+});
 
         res.json({
             message: "Purchase Successful"
